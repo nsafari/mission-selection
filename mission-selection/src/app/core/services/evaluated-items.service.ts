@@ -7,8 +7,10 @@ import { ScoringRulesService } from './scoring-rules.service';
 @Injectable({ providedIn: 'root' })
 export class EvaluatedItemsService {
   private itemsSignal = signal<EvaluatedItem[]>([]);
+  private editItemSignal = signal<EvaluatedItem | null>(null);
 
   items = this.itemsSignal.asReadonly();
+  editItem = this.editItemSignal.asReadonly();
   sortedByPriority = computed(() => {
     const list = [...this.itemsSignal()];
     return list.sort((a, b) => a.finalScore - b.finalScore); // lower = higher priority
@@ -26,7 +28,7 @@ export class EvaluatedItemsService {
     this.itemsSignal.set(this.storage.getEvaluatedItems());
   }
 
-  add(item: Omit<EvaluatedItem, 'id' | 'createdAt'>): EvaluatedItem {
+  add(item: Omit<EvaluatedItem, 'id' | 'createdAt' | 'finalScore'>): EvaluatedItem {
     const dimensions = this.rules.dimensions();
     const finalScore = this.calculation.calculateFinalScore(item.dimensionScores, dimensions);
     const newItem: EvaluatedItem = {
@@ -41,6 +43,29 @@ export class EvaluatedItemsService {
       return next;
     });
     return newItem;
+  }
+
+  update(item: EvaluatedItem): void {
+    const dimensions = this.rules.dimensions();
+    const finalScore = this.calculation.calculateFinalScore(item.dimensionScores, dimensions);
+    const updated: EvaluatedItem = { ...item, finalScore };
+    this.itemsSignal.update((list) => {
+      const next = list.map((i) => (i.id === item.id ? updated : i));
+      this.storage.setEvaluatedItems(next);
+      return next;
+    });
+  }
+
+  getById(id: string): EvaluatedItem | undefined {
+    return this.itemsSignal().find((i) => i.id === id);
+  }
+
+  setEditItem(item: EvaluatedItem | null): void {
+    this.editItemSignal.set(item);
+  }
+
+  clearEditItem(): void {
+    this.editItemSignal.set(null);
   }
 
   remove(id: string): void {

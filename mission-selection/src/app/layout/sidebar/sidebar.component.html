@@ -1,19 +1,31 @@
-<nav class="sidebar flex flex-col w-64 min-h-screen bg-white border-r border-gray-200 p-4">
+<nav class="sidebar flex flex-col w-64 min-h-screen bg-white border-r border-gray-200 p-4 shrink-0">
   <a routerLink="/dashboard" class="text-xl font-semibold text-gray-900 mb-8 px-2">
     Mission Selection
   </a>
   <ul class="space-y-1">
     @for (item of navItems; track item.path) {
       <li>
-        <a
-          [routerLink]="item.path"
-          routerLinkActive="bg-indigo-50 text-indigo-700"
-          [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-        >
-          <lucide-icon [img]="item.icon" [size]="20" />
-          <span>{{ item.label }}</span>
-        </a>
+        @if (item.path === '/evaluate') {
+          <a
+            (click)="goToNewEval()"
+            routerLink="/evaluate"
+            routerLinkActive="bg-indigo-50 text-indigo-700"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer"
+          >
+            <lucide-icon [img]="item.icon" [size]="20" />
+            <span>{{ item.label }}</span>
+          </a>
+        } @else {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="bg-indigo-50 text-indigo-700"
+            [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          >
+            <lucide-icon [img]="item.icon" [size]="20" />
+            <span>{{ item.label }}</span>
+          </a>
+        }
       </li>
     }
   </ul>

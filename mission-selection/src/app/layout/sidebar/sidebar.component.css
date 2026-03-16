@@ -1,0 +1,32 @@
+@media (max-width: 768px) {
+  :host {
+    display: block;
+    width: 100%;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-right: none;
+    border-bottom: 1px solid rgb(229 231 235);
+  }
+
+  .sidebar .text-xl {
+    margin-bottom: 0;
+  }
+
+  .sidebar ul {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .sidebar ul li a {
+    padding: 0.5rem 0.75rem;
+  }
+
+}

@@ -26,10 +26,12 @@ export class StorageService {
     if (!raw) return [];
     try {
       const parsed = JSON.parse(raw) as unknown[];
-      return parsed.map((item) => ({
-        ...item,
-        createdAt: new Date((item as EvaluatedItem & { createdAt: string }).createdAt),
-      })) as EvaluatedItem[];
+      return parsed
+        .filter((x): x is Record<string, unknown> => x != null && typeof x === 'object')
+        .map((item) => ({
+          ...item,
+          createdAt: new Date(String(item['createdAt'] ?? 0)),
+        })) as EvaluatedItem[];
     } catch {
       return [];
     }
