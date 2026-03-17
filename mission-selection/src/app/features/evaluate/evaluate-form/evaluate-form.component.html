@@ -1,0 +1,57 @@
+<div class="p-8 max-w-2xl">
+  <h1 class="text-2xl font-semibold text-gray-900 mb-8">
+    {{ editingItem() ? 'Edit Evaluation' : 'New Evaluation' }}
+  </h1>
+
+  <div class="space-y-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Topic / Mission Title</label>
+      <input
+        type="text"
+        [value]="topicTitle()"
+        (input)="topicTitle.set($any($event.target).value)"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="e.g. Community Outreach Initiative"
+      />
+    </div>
+
+    @for (dim of dimensions(); track dim.id) {
+      <div class="p-4 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-medium text-gray-900 mb-2">{{ dim.name }}</h3>
+        <div class="flex items-center gap-4 mb-2">
+          <span class="text-sm text-gray-500">1</span>
+          <input
+            type="range"
+            min="1"
+            max="5"
+            step="2"
+            [value]="getScore(dim.id)"
+            (input)="setScore(dim.id, +$any($event.target).value)"
+            class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          />
+          <span class="text-sm text-gray-500">5</span>
+        </div>
+        <p class="text-sm text-gray-600 mt-2 bg-gray-50 p-2 rounded">
+          {{ liveDescription()(dim.id) || 'Select a level' }}
+        </p>
+      </div>
+    }
+
+    @empty {
+      <div class="p-6 bg-amber-50 border border-amber-200 rounded-xl text-amber-800">
+        <p>No scoring dimensions defined. Add dimensions in <a routerLink="/rules" class="underline font-medium">Rules</a> first.</p>
+      </div>
+    }
+
+    @if (dimensions().length > 0) {
+      <button
+        (click)="submit()"
+        [disabled]="!canSubmit()"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        <lucide-icon [img]="Send" [size]="18" />
+        Submit Evaluation
+      </button>
+    }
+  </div>
+</div>
