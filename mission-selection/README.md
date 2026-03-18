@@ -32,6 +32,16 @@ ng build
 
 Output is in `dist/mission-selection/`.
 
+## Deploy to GitHub Pages
+
+The app is configured to deploy to **https://nsafari.github.io/mission-selection/** via GitHub Actions.
+
+**One-time setup:**
+1. Go to **Settings** → **Pages** in this repo
+2. Under **Build and deployment** → **Source**, select **GitHub Actions**
+
+**Deployment:** Each push to `main` triggers the workflow. After the run completes, the site is live at the URL above.
+
 ## Default Dimensions
 
 On first load, the app seeds 6 default dimensions:

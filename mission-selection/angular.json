@@ -58,6 +58,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/mission-selection/",
               "budgets": [
                 {
                   "type": "initial",
