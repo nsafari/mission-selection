@@ -1,5 +1,39 @@
 <div class="p-8">
-  <h1 class="text-2xl font-semibold text-gray-900 mb-8">Priority Dashboard</h1>
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+    <h1 class="text-2xl font-semibold text-gray-900">Priority Dashboard</h1>
+    <div class="flex items-center gap-2">
+      <input
+        id="import-file-input"
+        type="file"
+        accept=".json,application/json"
+        class="hidden"
+        (change)="onImportFile($event)"
+      />
+      <button
+        (click)="exportData()"
+        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        title="Export rules and topics"
+      >
+        <lucide-icon [img]="Download" [size]="18" />
+        Export
+      </button>
+      <button
+        (click)="triggerImport()"
+        [disabled]="isImporting"
+        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        title="Import rules and topics"
+      >
+        <lucide-icon [img]="Upload" [size]="18" />
+        {{ isImporting ? 'Importing…' : 'Import' }}
+      </button>
+    </div>
+  </div>
+
+  @if (importError) {
+    <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+      {{ importError }}
+    </div>
+  }
 
   <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
     <table class="min-w-full divide-y divide-gray-200">

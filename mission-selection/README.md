@@ -4,7 +4,7 @@ A mission evaluation and prioritization app built with Angular 18+, Tailwind CSS
 
 ## Features
 
-- **Dashboard** – View evaluated missions/topics sorted by priority with rank badges (Critical/High/Medium/Low)
+- **Dashboard** – View evaluated missions/topics sorted by priority with rank badges (Critical/High/Medium/Low); Export/Import rules and topics to backup or transfer data
 - **New Eval** – Evaluate topics with configurable dimensions (1–5 sliders) and live descriptions
 - **Rules** – CRUD for scoring dimensions (Name, Weight, Level Descriptions 1/3/5)
 
