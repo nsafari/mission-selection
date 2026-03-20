@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import type { MissionSelectionExport } from '../models/export-format.model';
 import { StorageService } from './storage.service';
 import { ScoringRulesService } from './scoring-rules.service';
@@ -12,13 +15,39 @@ export class ExportImportService {
     private items: EvaluatedItemsService
   ) {}
 
-  export(): void {
+  async export(): Promise<void> {
     const data = this.storage.exportAll();
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: 'application/json',
-    });
+    const json = JSON.stringify(data, null, 2);
     const date = new Date().toISOString().slice(0, 10);
     const filename = `mission-selection-backup-${date}.json`;
+
+    if (Capacitor.getPlatform() !== 'web') {
+      await this.exportNative(json, filename);
+    } else {
+      this.exportWeb(json, filename);
+    }
+  }
+
+  private async exportNative(json: string, filename: string): Promise<void> {
+    await Filesystem.writeFile({
+      path: filename,
+      data: json,
+      directory: Directory.Cache,
+      encoding: Encoding.UTF8,
+    });
+    const { uri } = await Filesystem.getUri({
+      directory: Directory.Cache,
+      path: filename,
+    });
+    await Share.share({
+      title: filename,
+      url: uri,
+      dialogTitle: 'Save or share backup',
+    });
+  }
+
+  private exportWeb(json: string, filename: string): void {
+    const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

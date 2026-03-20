@@ -20,7 +20,9 @@ export class DashboardComponent {
   readonly Upload = Upload;
 
   importError = '';
+  exportError = '';
   isImporting = false;
+  isExporting = false;
 
   constructor(
     private evaluatedItems: EvaluatedItemsService,
@@ -29,8 +31,16 @@ export class DashboardComponent {
     private exportImport: ExportImportService
   ) {}
 
-  exportData(): void {
-    this.exportImport.export();
+  async exportData(): Promise<void> {
+    this.exportError = '';
+    this.isExporting = true;
+    try {
+      await this.exportImport.export();
+    } catch (err) {
+      this.exportError = err instanceof Error ? err.message : 'Export failed';
+    } finally {
+      this.isExporting = false;
+    }
   }
 
   onImportFile(event: Event): void {
