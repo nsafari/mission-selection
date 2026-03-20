@@ -11,11 +11,12 @@
       />
       <button
         (click)="exportData()"
-        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        [disabled]="isExporting"
+        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
         title="Export rules and topics"
       >
         <lucide-icon [img]="Download" [size]="18" />
-        Export
+        {{ isExporting ? 'Exporting…' : 'Export' }}
       </button>
       <button
         (click)="triggerImport()"
@@ -29,9 +30,9 @@
     </div>
   </div>
 
-  @if (importError) {
+  @if (importError || exportError) {
     <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
-      {{ importError }}
+      {{ importError || exportError }}
     </div>
   }
 
