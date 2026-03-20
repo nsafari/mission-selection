@@ -50,6 +50,8 @@ jobs:
 
   build-apk:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # create releases and upload APK
     steps:
       - uses: actions/checkout@v4
 
@@ -95,3 +97,14 @@ jobs:
         with:
           name: mission-selection-apk
           path: mission-selection/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Create Release with APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Mission Selection APK (Build #${{ github.run_number }})
+          body: |
+            Android APK built from commit ${{ github.sha }}
+            Triggered by: ${{ github.event_name }} on ${{ github.ref }}
+          files: mission-selection/android/app/build/outputs/apk/debug/app-debug.apk
+          draft: false
