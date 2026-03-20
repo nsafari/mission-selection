@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
+import { Clipboard } from '@capacitor/clipboard';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import type { MissionSelectionExport } from '../models/export-format.model';
@@ -29,21 +30,32 @@ export class ExportImportService {
   }
 
   private async exportNative(json: string, filename: string): Promise<void> {
-    await Filesystem.writeFile({
-      path: filename,
-      data: json,
-      directory: Directory.Cache,
-      encoding: Encoding.UTF8,
-    });
-    const { uri } = await Filesystem.getUri({
-      directory: Directory.Cache,
-      path: filename,
-    });
-    await Share.share({
-      title: filename,
-      url: uri,
-      dialogTitle: 'Save or share backup',
-    });
+    try {
+      const { uri } = await Filesystem.writeFile({
+        path: filename,
+        data: json,
+        directory: Directory.Cache,
+        encoding: Encoding.UTF8,
+      });
+      await Share.share({
+        title: filename,
+        url: uri,
+        dialogTitle: 'Save or share backup',
+      });
+    } catch {
+      try {
+        await Share.share({
+          title: filename,
+          text: json,
+          dialogTitle: 'Save or share backup',
+        });
+      } catch {
+        await Clipboard.write({ string: json });
+        throw new Error(
+          'Copied to clipboard. Paste into Files or Notes to save.'
+        );
+      }
+    }
   }
 
   private exportWeb(json: string, filename: string): void {

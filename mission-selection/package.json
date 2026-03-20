@@ -23,6 +23,7 @@
     "@angular/router": "^18.2.0",
     "@capacitor/android": "^8.2.0",
     "@capacitor/cli": "^8.2.0",
+    "@capacitor/clipboard": "^8.0.1",
     "@capacitor/core": "^8.2.0",
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/share": "^8.0.1",

@@ -21,6 +21,7 @@ export class DashboardComponent {
 
   importError = '';
   exportError = '';
+  exportMessage = '';
   isImporting = false;
   isExporting = false;
 
@@ -33,11 +34,17 @@ export class DashboardComponent {
 
   async exportData(): Promise<void> {
     this.exportError = '';
+    this.exportMessage = '';
     this.isExporting = true;
     try {
       await this.exportImport.export();
     } catch (err) {
-      this.exportError = err instanceof Error ? err.message : 'Export failed';
+      const msg = err instanceof Error ? err.message : 'Export failed';
+      if (msg.includes('clipboard')) {
+        this.exportMessage = msg;
+      } else {
+        this.exportError = msg;
+      }
     } finally {
       this.isExporting = false;
     }
