@@ -70,7 +70,6 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           packages: tools platform-tools platforms;android-36 build-tools;34.0.0
-
       - name: Install dependencies
         run: |
           cd mission-selection
