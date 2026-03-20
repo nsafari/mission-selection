@@ -30,9 +30,19 @@
     </div>
   </div>
 
-  @if (importError || exportError) {
+  @if (importError) {
     <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
-      {{ importError || exportError }}
+      {{ importError }}
+    </div>
+  }
+  @if (exportMessage) {
+    <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
+      {{ exportMessage }}
+    </div>
+  }
+  @if (exportError) {
+    <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+      {{ exportError }}
     </div>
   }
 
