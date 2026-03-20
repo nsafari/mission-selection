@@ -47,3 +47,56 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mission-selection/package-lock.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            tools
+            platform-tools
+            platforms;android-36
+            build-tools;34.0.0
+
+      - name: Install dependencies
+        run: |
+          cd mission-selection
+          npm ci
+
+      - name: Build web app for Capacitor
+        run: |
+          cd mission-selection
+          npm run build:capacitor
+
+      - name: Sync Capacitor
+        run: |
+          cd mission-selection
+          npx cap sync android
+
+      - name: Build APK
+        run: |
+          cd mission-selection/android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission-selection-apk
+          path: mission-selection/android/app/build/outputs/apk/debug/app-debug.apk

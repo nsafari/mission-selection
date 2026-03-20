@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mission Selection</string>
+    <string name="title_activity_main">Mission Selection</string>
+    <string name="package_name">com.missionselection.app</string>
+    <string name="custom_url_scheme">com.missionselection.app</string>
+</resources>
